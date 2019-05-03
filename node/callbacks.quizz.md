@@ -57,7 +57,11 @@ function readFileThenDo(next) {
   });
 }
 // Hint use try..catch
-readFileThenDo(data => {
+try{
+  readFileThenDo(data => {
   console.log(data);
-});
+} catch(err) {
+  console.error(err);
+}
 ```
+Solution: try ... catch does not work with Asynchronous code !
