@@ -5,10 +5,14 @@ The below code errors when you run it.
 Make it run without errors but you cannot change the location of the `let` statement, that has to stay at the end.
 
 ```js
-function doAsyncTask(cb) {
-  cb();
+function doAsyncTask(cb){
+  //cb();
+  process.nextTick(() => {
+    console.log("Async Task Calling Callback");
+    cb();
+  })
 }
-doAsyncTask(_ => console.log(message));
+doAsyncTask(()=> console.log(message));
 
 let message = "Callback Called";
 ```
