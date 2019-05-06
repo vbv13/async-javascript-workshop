@@ -43,11 +43,18 @@ Load a file from disk using readFile and then compress it using the async zlib n
 ```js
 const fs = require("fs");
 const zlib = require("zlib");
+//const util = require("util");
 
-function zlibPromise(data) {
-  zlib.gzip(data, (error, result) => {
-    //TODO
+//const readFile = util.promisify(fs.readFile);
+//const gzip = util.promisify(zlib.gzip);
+
+function gzip(data) {
+  return new Promise((resolve, reject) => {
+    zlib.gzip(data, (error, result) => {
+    if(error) return reject(error);
+    resolve(result);
   });
+  })
 }
 
 function readFile(filename, encoding) {
@@ -59,9 +66,15 @@ function readFile(filename, encoding) {
   });
 }
 
-readFile("./files/demofile.txt", "utf-8")
-    .then(...) // --> Load it then zip it and then print it to screen
-});
+readFile("./files/demofile.txt", "utf-8").then(
+      data => {
+        gzip(data).then(
+          result => console.log(result),
+          err => console.error("Failed to Zip", err)
+        )
+    },
+    err => console.error("Failed to read file", err)
+    ) // --> Load it then zip it and then print it to screen
 ```
 
 # Question 3
