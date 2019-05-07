@@ -70,7 +70,7 @@ readFile("./files/demofile.txt", "utf-8").then(
       data => {
         gzip(data).then(
           result => console.log(result),
-          err => console.error("Failed to Zip", err)
+          err => console.error("Failed to zip file", err)
         )
     },
     err => console.error("Failed to read file", err)
@@ -80,6 +80,40 @@ readFile("./files/demofile.txt", "utf-8").then(
 # Question 3
 
 Convert the previous code so that it now chains the promise as well.
+
+```js
+const fs = require("fs");
+const zlib = require("zlib");
+
+function gzip(data) {
+  return new Promise((resolve, reject) => {
+    zlib.gzip(data, (error, result) => {
+    if(error) return reject(error);
+    resolve(result);
+  });
+  })
+}
+
+function readFile(filename, encoding) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filename, encoding, (err, data) => {
+      if (err) reject(err);
+      resolve(data);
+    });
+  });
+}
+
+readFile("./files/demofile.txt", "utf-8").then(
+      data => {
+        return gzip(data);
+    },
+    err => console.error("Failed to read file", err)
+    ).then(
+          result => console.log(result),
+          err => console.error("Failed to zip file", err)
+        ) // --> Load it then zip it and then print it to screen
+
+```
 
 # Question 4
 
